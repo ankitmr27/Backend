@@ -12,11 +12,12 @@ function getSignup(req, res) {
 async function postSignup(req, res) {
   let dataObject = req.body;
   //console.log("backend", dataObject);
-  await userModel.create(dataObject);
+  let user = await userModel.create(dataObject);
   res.json({
     message: "user Signed up",
     data: dataObject,
   });
+  console.log("created user:", user);
 }
 
 authRouter.route("/signup").get(getSignup).post(postSignup);

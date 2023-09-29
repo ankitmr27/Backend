@@ -11,9 +11,9 @@ function getCookies(req, res) {
 
 function setCookies(req, res) {
   res.cookie("isLoggedIn", false, {
-    maxAge: 1000 * 60 * 60 * 24,
-    secure: true,
-    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24, // age of cookies
+    secure: true, // means its only uses HTTPS
+    httpOnly: true, // stops the cookie access from frontend of webbrowser
   });
   res.cookie("isPrimeMember", true, { httpOnly: true });
   res.send("cookies has been set");
