@@ -31,6 +31,8 @@ async function loginUser(req, res) {
       if (user) {
         //bcrypt has be to taken care of
         if (user.password === req.body.password) {
+          //setting the cookie as true for logged in user
+          res.cookie("isLoggedIn", true, { httpOnly: true }); // sending single cookie
           return res.json({
             message: "User Found",
             userDetails: req.body,

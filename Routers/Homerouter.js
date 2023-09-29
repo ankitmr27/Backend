@@ -1,6 +1,8 @@
 const express = require("express");
 const userModel = require("../models/userModel.js");
 const HomeRouter = express.Router();
+const protectRoute = require("./protectRoute.js");
+
 HomeRouter.route("/")
   .get((req, res) => {
     res.json({
@@ -11,8 +13,8 @@ HomeRouter.route("/")
   })
   .post();
 
-HomeRouter.route("/getUser")
-  .get(async (req, res) => {
+HomeRouter.route("/user")
+  .get(protectRoute, async (req, res) => {
     try {
       let users = await userModel.find();
       res.json({
@@ -25,7 +27,7 @@ HomeRouter.route("/getUser")
   })
   .post();
 
-HomeRouter.route("/getUser/:id")
+HomeRouter.route("/user/:id")
   .get(async (req, res, next) => {
     try {
       let user = await userModel.find({ email: req.params.id });
@@ -41,4 +43,5 @@ HomeRouter.route("/getUser/:id")
   .post()
   .patch()
   .delete();
+
 module.exports = HomeRouter;

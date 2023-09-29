@@ -22,7 +22,7 @@ app.use("/getUser", userRouter);
 
 // middleware functions has access to req-res cycle and by using next inbuilt function we pass the
 // modified req-res to incoming middleware means which will get executed next
-app.user("/other", (req, res, next) => {
+app.use("/other", (req, res, next) => {
   //......
   next();
 });
