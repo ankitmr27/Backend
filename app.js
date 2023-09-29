@@ -12,6 +12,7 @@ app.listen(process.env.PORT, () => {
 
 // express.json() parses incoming request, post data in json string format and query parameters in url encoded string and make
 // them available in req.body(post data for post http request) and req.params(query parameters)
+// like @ get uncoded as %40
 app.use(express.json());
 app.use(cookieParser());
 
