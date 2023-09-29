@@ -1,7 +1,8 @@
 const express = require("express");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel.js");
-
+const JWT_KEY = process.env.JWT_KEY;
 //auth routes
 const authRouter = express.Router();
 
@@ -31,8 +32,11 @@ async function loginUser(req, res) {
       if (user) {
         //bcrypt has be to taken care of
         if (user.password === req.body.password) {
+          let uid = user["_id"]; // unique id
+          // this function will include header itself default
+          let JWTtoken = jwt.sign({ payload: uid }, JWT_KEY); // by default- HMAC-SHA256 but to specify{algorithm:'RS256'}
           //setting the cookie as true for logged in user
-          res.cookie("isLoggedIn", true, { httpOnly: true }); // sending single cookie
+          res.cookie("isLoggedIn", JWTtoken, { httpOnly: true }); // sending single cookie
           return res.json({
             message: "User Found",
             userDetails: req.body,
