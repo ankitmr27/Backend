@@ -26,7 +26,7 @@ HomeRouter.route("/getUser")
   .post();
 
 HomeRouter.route("/getUser/:id")
-  .get(async (req, res) => {
+  .get(async (req, res, next) => {
     try {
       let user = await userModel.find({ email: req.params.id });
       res.json({
@@ -36,6 +36,7 @@ HomeRouter.route("/getUser/:id")
     } catch (e) {
       console.log(e);
     }
+    next();
   })
   .post()
   .patch()

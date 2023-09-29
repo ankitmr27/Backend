@@ -19,3 +19,10 @@ app.use(cookieParser());
 app.use("/home", HomeRouter);
 app.use("/auth", authRouter);
 app.use("/getUser", userRouter);
+
+// middleware functions has access to req-res cycle and by using next inbuilt function we pass the
+// modified req-res to incoming middleware means which will get executed
+app.user("/other", (req, res, next) => {
+  //......
+  next();
+});
