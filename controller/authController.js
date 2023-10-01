@@ -42,7 +42,7 @@ module.exports.loginUser = async function loginUser(req, res) {
           // this function will include header itself default
           let JWTtoken = jwt.sign({ payload: uid }, JWT_KEY); // by default- HMAC-SHA256 but to specify{algorithm:'RS256'}
           //setting the cookie as true for logged in user
-          res.cookie("isLoggedIn", JWTtoken, { httpOnly: true }); // sending single cookie
+          res.cookie("isLoggedIn", JWTtoken, { httpOnly: true }); // sending single cookie and seetting it http true to stop access from frontend
           return res.json({
             message: "User Found",
             userDetails: req.body,
@@ -59,4 +59,9 @@ module.exports.loginUser = async function loginUser(req, res) {
   } else {
     res.json({ message: "Empty email found" });
   }
+};
+
+module.exports.logOut = function logOut(req, res) {
+  res.cookie("isLoggedIn", "-");
+  res.json({ message: "User logged out" });
 };

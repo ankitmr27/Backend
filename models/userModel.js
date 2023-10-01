@@ -5,8 +5,9 @@ const bcrypt = require("bcrypt");
 
 const db_link = process.env.DB_URL;
 
+// create a default size of 5 database connections
 mongoose
-  .connect(db_link)
+  .connect(db_link, { maxPoolSize: 10 })
   .then(function (db) {
     console.log("db connected");
     //console.log(db);
