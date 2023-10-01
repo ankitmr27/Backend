@@ -26,3 +26,5 @@ app.use("/other", (req, res, next) => {
   //......
   next();
 });
+
+module.exports = app;

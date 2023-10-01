@@ -5,7 +5,8 @@ module.exports.getCookies = function getCookies(req, res) {
 };
 
 module.exports.setCookies = function setCookies(req, res) {
-  res.cookie("isLoggedIn", false, {
+  res.status(200);
+  res.cookie("isLoggedIn", true, {
     maxAge: 1000 * 60 * 60 * 24, // age of cookies
     secure: true, // means its only uses HTTPS
     httpOnly: true, // stops the cookie access from frontend of webbrowser

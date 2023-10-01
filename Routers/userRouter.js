@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-const {} = require("../controller/userController.js");
+const { getCookies, setCookies } = require("../controller/userController.js");
 
 const userRouter = express.Router();
 
