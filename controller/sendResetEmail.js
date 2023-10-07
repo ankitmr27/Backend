@@ -8,6 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// sending email for reset password link
 module.exports.sendResetEmail = async function sendResetEmail(email, token) {
   console.log(email, " - ", token);
   const mailOptions = {
