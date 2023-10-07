@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const JWT_KEY = process.env.JWT_KEY;
 const path = require("node:path");
 const bcrypt = require("bcrypt");
+const { sendResetEmail } = require("./sendResetEmail.js");
+const { send } = require("node:process");
 
 module.exports.getSignup = function getSignup(req, res) {
   try {
@@ -25,7 +27,16 @@ module.exports.getSignup = function getSignup(req, res) {
 module.exports.postSignup = async function postSignup(req, res) {
   try {
     let dataObject = req.body;
-    if (userModel.find({ email: dataObject.email })) {
+    console.log(dataObject);
+    if (dataObject.password != dataObject.confirmPassword) {
+      res.json({ message: "password mismatched" });
+    }
+    if (!dataObject.password) {
+      res.json({ message: "password can't be blank" });
+    }
+    let User = await userModel.findOne({ email: dataObject.email });
+    console.log(User);
+    if (User) {
       res.json({ message: "Email already exists" });
     }
     //console.log("backend", dataObject);
@@ -46,7 +57,7 @@ module.exports.loginUser = async function loginUser(req, res) {
       let user = await userModel.findOne({ email: req.body.email });
       if (user) {
         //bcrypt has be to taken care of
-        const match = await bcrypt.compare(user.password, req.body.password);
+        const match = await bcrypt.compare(req.body.password, user.password);
         if (match) {
           let uid = user["_id"]; // unique id
           // this function will include header itself default
@@ -80,23 +91,35 @@ module.exports.forgotPassword = async function forgotPassword(req, res) {
   try {
     let email = req.body.email;
     let user = await userModel.find({ email: email });
-    if (user) {
-      if (!user.resetToken) {
-        // send nodemailer reset link to user
-        let token = jwt.sign({ payload: email }, JWT_KEY, {
-          expiresIn: 5 * 60,
-        });
-        // store the reset token to database
-        const resUpdate = await userModel.updateOne(
-          { email: email },
-          { resetToken: token }
-        );
-        if (!resUpdate.acknowledged) {
-          res.json({ message: "Error occurred while updating" });
-        }
+    //console.log(user.length);
+    if (user.length) {
+      //console.log(user);
+      // send nodemailer reset link to user
+      let token = jwt.sign({ payload: email }, JWT_KEY, {
+        expiresIn: 5 * 60,
+      });
+      // store the reset token to database
+      const resUpdate = await userModel.updateOne(
+        { email: email },
+        { resetToken: token }
+      );
+
+      if (!resUpdate.acknowledged) {
+        res.json({ message: "Error occurred while updating" });
       }
-      // send the reset link to user email address
-      //sendEmail(email);
+
+      // send the reset link to user email address and set the reset token to null
+      //
+      //
+      //
+      //
+      //console.log(typeof sendResetEmail);
+      //console.log(sendResetEmail);
+      sendResetEmail(email, token);
+      //
+      //
+      //
+      //
       res.json({ message: "reset token created" });
       //
     } else {
