@@ -43,6 +43,10 @@ const userSchema = mongoose.Schema({
       return this.confirmPassword == this.password;
     },
   },
+  resetToken: {
+    type: String,
+    default: null,
+  },
 });
 
 // triggers before save event entry is done
