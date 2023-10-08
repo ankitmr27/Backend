@@ -108,15 +108,24 @@ module.exports.forgotPassword = async function forgotPassword(req, res) {
       if (!resUpdate.acknowledged) {
         res.json({ message: "Error occurred while updating" });
       }
+
+      const url = `${req.protocol}://${req.get(
+        "host"
+      )}/forgotPassword/${token}?email=${email}`;
+
+      //console.log(url);
       let htmlString = getHtmlString("reset password", {
         email: email,
         resetToken: token,
+        resetURL: url,
       });
       // send the reset link to user email address and set the reset token to null
       //console.log(typeof sendResetEmail);
       const info = await sendEmail(email, "reset password", htmlString);
       //console.log(sendResetEmail);
-      res.json({ message: "reset token created!" });
+      res.json({
+        message: "reset token created!",
+      });
       //
     } else {
       res.json({ message: "User not found" });
