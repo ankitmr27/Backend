@@ -91,20 +91,20 @@ module.exports.logOut = function logOut(req, res) {
 module.exports.forgotPassword = async function forgotPassword(req, res) {
   try {
     let email = req.body.email;
-    let user = await userModel.find({ email: email });
-    //console.log(user.length);
-    if (user.length) {
+    let user = await userModel.findOne({ email: email });
+    //console.log(user);
+    if (user) {
       //console.log(user);
       // send nodemailer reset link to user
       let token = jwt.sign({ payload: email }, JWT_KEY, {
-        expiresIn: 5 * 60,
+        expiresIn: 10 * 60,
       });
       // store the reset token to database
       const resUpdate = await userModel.updateOne(
         { email: email },
         { resetToken: token }
       );
-
+      //console.log(resUpdate);
       if (!resUpdate.acknowledged) {
         res.json({ message: "Error occurred while updating" });
       }
@@ -144,20 +144,35 @@ module.exports.resetPassword = async function resetPassword(req, res) {
     if (data.password == data.confirmPassword) {
       let user = await userModel.findOne({ email: query.email });
       //console.log(user, user.resetToken == params.resetToken);
-      if (user && user.resetToken == params.resetToken) {
+      let validateToken = false;
+      jwt.verify(params.resetToken, process.env.JWT_KEY, (err, decoded) => {
+        if (err) {
+          console.log(err);
+          res.status(500); // internal server error
+          res.json({ error: err });
+        } else {
+          validateToken = true;
+        }
+      });
+
+      if (user && validateToken && user.resetToken == params.resetToken) {
         // updating the user's password and reseting the token to null
-        let updatedUser = await userModel.updateOne(
+        let salt = await bcrypt.genSalt();
+        let hashedPassword = await bcrypt.hash(data.password, salt);
+        let updateInfo = await userModel.updateOne(
           { email: query.email },
-          { password: data.password, resetToken: null }
+          { password: hashedPassword, resetToken: null }
         );
         res.json({
           message: "user reset password",
           data: updateInfo,
         });
       } else {
+        res.status(400); // bad request
         res.json({ message: "Invalid user" });
       }
     } else {
+      res.status(401); // unauthorized
       res.json({ message: "mismatch password" });
     }
   } catch (e) {
