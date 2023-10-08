@@ -3,6 +3,6 @@ module.exports.getHtmlString = function getHtmlString(subject, data) {
     const resetURL = `http://localhost:300/auth/forgotPassword/:${data.resetToken}?email=${data.email}`;
     return `<a href=${resetURL}>Reset Link</a>`;
   } else if (subject == "signup") {
-    return "<h1>Welcome to our website</h1>";
+    return `<h1>Welcome to our website:${data.name}</h1>`;
   }
 };

@@ -42,6 +42,7 @@ module.exports.postSignup = async function postSignup(req, res) {
     //console.log("backend", dataObject);
     let user = await userModel.create(dataObject);
     console.log("created user:", user);
+    sendEmail("signup", user);
     res.json({
       message: "user Signed up",
       data: dataObject,
