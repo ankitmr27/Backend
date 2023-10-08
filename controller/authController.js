@@ -111,7 +111,7 @@ module.exports.forgotPassword = async function forgotPassword(req, res) {
 
       const url = `${req.protocol}://${req.get(
         "host"
-      )}/forgotPassword/${token}?email=${email}`;
+      )}/auth/forgotPassword/${token}?email=${email}`;
 
       //console.log(url);
       let htmlString = getHtmlString("reset password", {
@@ -129,6 +129,36 @@ module.exports.forgotPassword = async function forgotPassword(req, res) {
       //
     } else {
       res.json({ message: "User not found" });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+module.exports.resetPassword = async function resetPassword(req, res) {
+  try {
+    let data = req.body; // has new password
+    let params = req.params; // has resetToken
+    let query = req.query; // has email
+    //console.log(query, data, params);
+    if (data.password == data.confirmPassword) {
+      let user = await userModel.findOne({ email: query.email });
+      //console.log(user, user.resetToken == params.resetToken);
+      if (user && user.resetToken == params.resetToken) {
+        // updating the user's password and reseting the token to null
+        let updatedUser = await userModel.updateOne(
+          { email: query.email },
+          { password: data.password, resetToken: null }
+        );
+        res.json({
+          message: "user reset password",
+          data: updateInfo,
+        });
+      } else {
+        res.json({ message: "Invalid user" });
+      }
+    } else {
+      res.json({ message: "mismatch password" });
     }
   } catch (e) {
     console.log(e);

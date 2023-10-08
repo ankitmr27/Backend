@@ -7,6 +7,7 @@ const {
   loginUser,
   logOut,
   forgotPassword,
+  resetPassword,
 } = require("../controller/authController");
 
 //auth routes
@@ -22,5 +23,6 @@ authRouter
 authRouter.route("/logout").get(protectRoute, logOut);
 
 authRouter.route("/forgotPassword").post(forgotPassword);
+authRouter.route("/forgotPassword/:resetToken").post(resetPassword);
 
 module.exports = authRouter;
