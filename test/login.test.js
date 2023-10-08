@@ -10,7 +10,7 @@ describe("login function", () => {
   it("should return json", (done) => {
     const user = {
       email: "puma@gmail.com",
-      password: "786",
+      password: "8627",
     };
     chai
       .request(app)

@@ -35,13 +35,9 @@ const userSchema = mongoose.Schema({
     required: true,
     minLength: 1,
   },
-  confirmPassword: {
+  resetToken: {
     type: String,
-    required: true,
-    minLength: 1,
-    validate: function () {
-      return this.confirmPassword == this.password;
-    },
+    default: null,
   },
 });
 
@@ -50,7 +46,6 @@ const userSchema = mongoose.Schema({
 userSchema.pre("save", async function () {
   console.log("Before saving in data base:", this);
   // it will invalidate this field so won't be stored in database
-  this.confirmPassword = undefined;
   let salt = await bcrypt.genSalt();
   let hashedString = await bcrypt.hash(this.password, salt);
   this.password = hashedString;
