@@ -16,6 +16,7 @@ module.exports.getSignup = function getSignup(req, res) {
   }
 };
 
+// signup function : creates a new user
 module.exports.postSignup = async function postSignup(req, res) {
   try {
     let dataObject = req.body;
