@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 const JWT_KEY = process.env.JWT_KEY;
 const path = require("node:path");
 const bcrypt = require("bcrypt");
-const { sendResetEmail } = require("./sendResetEmail.js");
-const { send } = require("node:process");
+const { sendEmail } = require("../utility/sendEmail.js");
+const { getHtmlString } = require("../utility/htmlString.js");
 
 module.exports.getSignup = function getSignup(req, res) {
   try {
@@ -107,20 +107,15 @@ module.exports.forgotPassword = async function forgotPassword(req, res) {
       if (!resUpdate.acknowledged) {
         res.json({ message: "Error occurred while updating" });
       }
-
+      let htmlString = getHtmlString("reset password", {
+        email: email,
+        resetToken: token,
+      });
       // send the reset link to user email address and set the reset token to null
-      //
-      //
-      //
-      //
       //console.log(typeof sendResetEmail);
+      const info = await sendEmail(email, "reset password", htmlString);
       //console.log(sendResetEmail);
-      sendResetEmail(email, token);
-      //
-      //
-      //
-      //
-      res.json({ message: "reset token created" });
+      res.json({ message: "reset token created!" });
       //
     } else {
       res.json({ message: "User not found" });

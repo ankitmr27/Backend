@@ -1,21 +1,28 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: process.env.SMTP_PORT,
+  secure: true,
   service: "gmail",
   auth: {
-    user: "ankitm.ac.in@gmail.com",
-    pass: "Ankit756123",
+    user: process.env.GMAIL_USER_ID,
+    pass: process.env.GMAIL_PASSWORD,
   },
 });
 
 // sending email for reset password link
-module.exports.sendResetEmail = async function sendResetEmail(email, token) {
-  console.log(email, " - ", token);
+module.exports.sendEmail = async function sendEmail(
+  email,
+  subject,
+  htmlString
+) {
+  //console.log(email, " - ", token);
   const mailOptions = {
-    from: "ankitm.ac.in@gmail.com",
+    from: '"Ankit Maurya" <ankitm.ac.in@gmail.com>',
     to: email,
-    subject: "Sending Email using Node.js",
-    text: "That was easy!",
+    subject: subject,
+    html: htmlString,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
