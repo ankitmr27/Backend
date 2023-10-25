@@ -66,10 +66,12 @@ module.exports.loginUser = async function loginUser(req, res) {
           let JWTtoken = jwt.sign({ payload: uid }, JWT_KEY); // by default- HMAC-SHA256 but to specify{algorithm:'RS256'}
           //setting the cookie as true for logged in user
           res.cookie("isLoggedIn", JWTtoken, { httpOnly: true }); // sending single cookie and seetting it http true to stop access from frontend
+          res.status(200);
           return res.json({
             message: "User Found",
             userDetails: req.body,
           });
+          test / login.test.js;
         } else {
           return res.json({ message: "Invalid Credential" });
         }
