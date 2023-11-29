@@ -1,7 +1,7 @@
 {
   "name": "v2v",
   "version": "1.0.0",
-  "description": "Food delivery app",
+  "description": "backend_v2v",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
